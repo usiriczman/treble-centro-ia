@@ -66,7 +66,7 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
       style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)' }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div style={{ background: '#f3f3f3', borderRadius: 20, width: '100%', maxWidth: 820, maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.18)' }}>
+      <div style={{ background: '#f8f8f8', borderRadius: 20, width: '100%', maxWidth: 820, maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.18)' }}>
 
         {/* Top bar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '20px 20px 0' }}>
@@ -88,7 +88,7 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
           </h2>
 
           {/* Prompt input */}
-          <div style={{ border: '1px solid #e2e2e2', borderRadius: 16, background: '#fff', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+          <div style={{ border: '1px solid #e2e2e2', borderRadius: 16, background: '#fff', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             <textarea
               value={prompt}
               rows={2}
