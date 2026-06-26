@@ -117,8 +117,8 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
                 <button key={t.title}
                   onClick={() => setPrompt(t.prompt)}
                   style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '16px 14px', borderRadius: 12, border: '1px solid #e8e8e8', background: '#fff', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s, box-shadow 0.15s' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#c8c8c8'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.07)' }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#e8e8e8'; e.currentTarget.style.boxShadow = 'none' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#6464FF' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#e8e8e8' }}
                 >
                   <div style={{ width: 36, height: 36, borderRadius: 10, background: t.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <i className={t.icon} style={{ fontSize: 16, color: t.iconColor }} />
