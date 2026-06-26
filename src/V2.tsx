@@ -66,29 +66,29 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
       style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)' }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div style={{ background: '#1a1a1a', borderRadius: 20, width: '100%', maxWidth: 660, maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 32px 80px rgba(0,0,0,0.6)' }}>
+      <div style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 820, maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.18)' }}>
 
         {/* Top bar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '20px 20px 0' }}>
           <button
             onClick={onClose}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 8, background: 'transparent', border: 'none', color: '#555', cursor: 'pointer', fontFamily: 'inherit' }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#2a2a2a'; e.currentTarget.style.color = '#fff' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#555' }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 8, background: 'transparent', border: 'none', color: '#aaa', cursor: 'pointer', fontFamily: 'inherit' }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#f0f0f0'; e.currentTarget.style.color = '#333' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#aaa' }}
           >
             <i className="ri-close-line" style={{ fontSize: 18 }} />
           </button>
         </div>
 
         {/* Scrollable body */}
-        <div style={{ overflowY: 'auto', padding: '20px 28px 28px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div style={{ overflowY: 'auto', padding: '16px 32px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
 
-          <h2 style={{ margin: 0, textAlign: 'center', color: '#fff', fontSize: 22, fontWeight: 600, lineHeight: 1.3, fontFamily: 'inherit' }}>
+          <h2 style={{ margin: 0, textAlign: 'center', color: '#111', fontSize: 22, fontWeight: 600, lineHeight: 1.3, fontFamily: 'inherit' }}>
             ¿Qué debería hacer tu agente de IA?
           </h2>
 
-          {/* Dark prompt input wrapper */}
-          <div style={{ border: '1px solid #333', borderRadius: 16, background: '#252525', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {/* Prompt input */}
+          <div style={{ border: '1px solid #e2e2e2', borderRadius: 16, background: '#fff', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10, boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
             <textarea
               value={prompt}
               rows={2}
@@ -100,11 +100,11 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
               }}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) e.preventDefault() }}
               placeholder="Ej: Gestiona pedidos de Shopify y responde preguntas de estado..."
-              style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', resize: 'none', color: '#e5e5e5', fontSize: 14, fontFamily: 'inherit', lineHeight: 1.5, minHeight: 40, overflowY: 'auto', boxSizing: 'border-box' }}
+              style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', resize: 'none', color: '#111', fontSize: 14, fontFamily: 'inherit', lineHeight: 1.5, minHeight: 40, overflowY: 'auto', boxSizing: 'border-box' }}
             />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
               <button
-                style={{ width: 32, height: 32, borderRadius: 8, border: 'none', cursor: prompt.trim() ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', background: prompt.trim() ? '#fff' : '#333', color: prompt.trim() ? '#111' : '#555', fontFamily: 'inherit', transition: 'background 0.15s, color 0.15s' }}
+                style={{ width: 32, height: 32, borderRadius: 8, border: 'none', cursor: prompt.trim() ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', background: prompt.trim() ? '#111' : '#ececec', color: prompt.trim() ? '#fff' : '#aaa', fontFamily: 'inherit', transition: 'background 0.15s, color 0.15s' }}
               >
                 <i className="ri-arrow-up-line" style={{ fontSize: 15 }} />
               </button>
@@ -114,21 +114,21 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
           {/* Agent templates */}
           <div>
             <div style={{ marginBottom: 12 }}>
-              <span style={{ color: '#aaa', fontSize: 13, fontWeight: 500, fontFamily: 'inherit' }}>Plantillas de agentes</span>
+              <span style={{ color: '#999', fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'inherit' }}>Empieza con una plantilla</span>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
               {modalTemplates.map(t => (
                 <button key={t.title}
-                  style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '14px 12px', borderRadius: 12, border: '1px solid #2e2e2e', background: '#222', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s, background 0.15s' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.background = '#2a2a2a' }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#2e2e2e'; e.currentTarget.style.background = '#222' }}
+                  style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '16px 14px', borderRadius: 12, border: '1px solid #ebebeb', background: '#fafafa', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s, box-shadow 0.15s' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#d0d0d0'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.boxShadow = 'none' }}
                 >
                   <div style={{ width: 36, height: 36, borderRadius: 10, background: t.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <i className={t.icon} style={{ fontSize: 16, color: t.iconColor }} />
                   </div>
                   <div>
-                    <p style={{ margin: 0, color: '#e5e5e5', fontSize: 13, fontWeight: 600, lineHeight: 1.3 }}>{t.title}</p>
-                    <p style={{ margin: '3px 0 0', color: '#666', fontSize: 11, lineHeight: 1.4 }}>{t.description}</p>
+                    <p style={{ margin: 0, color: '#111', fontSize: 13, fontWeight: 600, lineHeight: 1.3 }}>{t.title}</p>
+                    <p style={{ margin: '4px 0 0', color: '#999', fontSize: 11, lineHeight: 1.4 }}>{t.description}</p>
                   </div>
                 </button>
               ))}
