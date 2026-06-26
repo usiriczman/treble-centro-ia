@@ -34,10 +34,6 @@ const modalTemplates = [
   { icon: 'ri-shopping-cart-2-line', iconBg: '#fff0f6', iconColor: '#e5177b', title: 'Carritos abandonados', description: 'Recupera ventas con seguimientos.', prompt: 'Un agente que contacte a clientes que abandonaron su carrito de compras, ofrezca asistencia personalizada y un incentivo para completar su compra.' },
 ]
 
-const externalAgents = [
-  { icon: 'ri-sparkling-2-line', iconColor: '#ff8c5a', name: 'Claude', description: 'Redacta contenido, analiza documentos y razona sobre problemas complejos.' },
-  { icon: 'ri-code-s-slash-line', iconColor: '#94a3b8', name: 'Cursor', description: 'Escribe y edita código en tus repositorios de forma autónoma.' },
-]
 
 // ── Status badge ───────────────────────────────────────────────────────────
 
