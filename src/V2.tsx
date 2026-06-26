@@ -69,14 +69,7 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
       <div style={{ background: '#1a1a1a', borderRadius: 20, width: '100%', maxWidth: 660, maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 32px 80px rgba(0,0,0,0.6)' }}>
 
         {/* Top bar */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '20px 20px 0', gap: 4 }}>
-          <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 8, background: 'transparent', border: 'none', color: '#777', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#ccc')}
-            onMouseLeave={e => (e.currentTarget.style.color = '#777')}
-          >
-            <i className="ri-pencil-line" style={{ fontSize: 14 }} />
-            Crear en blanco
-          </button>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '20px 20px 0' }}>
           <button
             onClick={onClose}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 8, background: 'transparent', border: 'none', color: '#555', cursor: 'pointer', fontFamily: 'inherit' }}
@@ -120,14 +113,8 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
 
           {/* Agent templates */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+            <div style={{ marginBottom: 12 }}>
               <span style={{ color: '#aaa', fontSize: 13, fontWeight: 500, fontFamily: 'inherit' }}>Plantillas de agentes</span>
-              <button style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#666', fontSize: 12, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#aaa')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#666')}
-              >
-                Ver marketplace <i className="ri-arrow-right-up-line" style={{ fontSize: 12 }} />
-              </button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
               {modalTemplates.map(t => (
@@ -148,30 +135,6 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
             </div>
           </div>
 
-          {/* External agents */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
-              <span style={{ color: '#aaa', fontSize: 13, fontWeight: 500, fontFamily: 'inherit' }}>Agentes externos</span>
-              <i className="ri-information-line" style={{ fontSize: 13, color: '#555' }} />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              {externalAgents.map(a => (
-                <button key={a.name}
-                  style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '14px 16px', borderRadius: 12, border: '1px solid #2e2e2e', background: '#222', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s, background 0.15s' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.background = '#2a2a2a' }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#2e2e2e'; e.currentTarget.style.background = '#222' }}
-                >
-                  <div style={{ width: 38, height: 38, borderRadius: 10, background: '#111', border: '1px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <i className={a.icon} style={{ fontSize: 18, color: a.iconColor }} />
-                  </div>
-                  <div>
-                    <p style={{ margin: 0, color: '#e5e5e5', fontSize: 13, fontWeight: 600 }}>{a.name}</p>
-                    <p style={{ margin: '4px 0 0', color: '#666', fontSize: 12, lineHeight: 1.45 }}>{a.description}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>
