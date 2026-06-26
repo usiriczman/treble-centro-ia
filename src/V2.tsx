@@ -1,15 +1,9 @@
 import { useState } from 'react'
 import 'remixicon/fonts/remixicon.css'
 import Sidebar from '@/components/Sidebar'
-import {
-  PromptInput,
-  PromptInputTextarea,
-  PromptInputActions,
-  PromptInputActionGroup,
-  PromptInputAction,
-} from '@/components/nexus-ui/prompt-input'
+// prompt-input pieces used inline in modal textarea instead of the composable API
 
-// ── Mock data ──────────────────────────────────────────────────────────────
+// ── Data ───────────────────────────────────────────────────────────────────
 
 type AgentStatus = 'Activo' | 'Inactivo' | 'Borrador'
 
@@ -26,66 +20,14 @@ interface Agent {
 }
 
 const agents: Agent[] = [
-  {
-    id: '1',
-    name: 'Soporte 24/7',
-    description: 'Resuelve dudas frecuentes sobre envíos y devoluciones.',
-    status: 'Activo',
-    conversations: 1842,
-    createdAt: '12 Jun 2026',
-    icon: 'ri-headphone-line',
-    iconBg: '#f0f0ff',
-    iconColor: '#5b5bd6',
-  },
-  {
-    id: '2',
-    name: 'Calificación de leads',
-    description: 'Cualifica prospectos entrantes y los asigna al vendedor correcto.',
-    status: 'Activo',
-    conversations: 934,
-    createdAt: '05 Jun 2026',
-    icon: 'ri-focus-3-line',
-    iconBg: '#fff0f6',
-    iconColor: '#e5177b',
-  },
-  {
-    id: '3',
-    name: 'Agenda de citas',
-    description: 'Coordina, confirma y recuerda reuniones automáticamente.',
-    status: 'Inactivo',
-    conversations: 421,
-    createdAt: '28 May 2026',
-    icon: 'ri-calendar-check-line',
-    iconBg: '#f0fff4',
-    iconColor: '#17a34a',
-  },
-  {
-    id: '4',
-    name: 'Recuperación de carritos',
-    description: 'Contacta a compradores con carritos abandonados.',
-    status: 'Activo',
-    conversations: 2107,
-    createdAt: '20 May 2026',
-    icon: 'ri-shopping-cart-2-line',
-    iconBg: '#fffbeb',
-    iconColor: '#d97706',
-  },
-  {
-    id: '5',
-    name: 'Onboarding de clientes',
-    description: 'Guía a nuevos clientes a través del proceso de activación.',
-    status: 'Borrador',
-    conversations: 0,
-    createdAt: '18 Jun 2026',
-    icon: 'ri-user-star-line',
-    iconBg: '#f0faff',
-    iconColor: '#0284c7',
-  },
+  { id: '1', name: 'Soporte 24/7', description: 'Resuelve dudas frecuentes sobre envíos y devoluciones.', status: 'Activo', conversations: 1842, createdAt: '12 Jun 2026', icon: 'ri-headphone-line', iconBg: '#f0f0ff', iconColor: '#5b5bd6' },
+  { id: '2', name: 'Calificación de leads', description: 'Cualifica prospectos entrantes y los asigna al vendedor correcto.', status: 'Activo', conversations: 934, createdAt: '05 Jun 2026', icon: 'ri-focus-3-line', iconBg: '#fff0f6', iconColor: '#e5177b' },
+  { id: '3', name: 'Agenda de citas', description: 'Coordina, confirma y recuerda reuniones automáticamente.', status: 'Inactivo', conversations: 421, createdAt: '28 May 2026', icon: 'ri-calendar-check-line', iconBg: '#f0fff4', iconColor: '#17a34a' },
+  { id: '4', name: 'Recuperación de carritos', description: 'Contacta a compradores con carritos abandonados.', status: 'Activo', conversations: 2107, createdAt: '20 May 2026', icon: 'ri-shopping-cart-2-line', iconBg: '#fffbeb', iconColor: '#d97706' },
+  { id: '5', name: 'Onboarding de clientes', description: 'Guía a nuevos clientes a través del proceso de activación.', status: 'Borrador', conversations: 0, createdAt: '18 Jun 2026', icon: 'ri-user-star-line', iconBg: '#f0faff', iconColor: '#0284c7' },
 ]
 
-// ── Modal templates ────────────────────────────────────────────────────────
-
-const templates = [
+const modalTemplates = [
   { icon: 'ri-headphone-line', iconBg: '#fff8ec', iconColor: '#d97706', title: 'Soporte al cliente', description: 'Resuelve dudas y abre tickets 24/7.' },
   { icon: 'ri-focus-3-line', iconBg: '#fdf4ff', iconColor: '#9333ea', title: 'Calificación de leads', description: 'Cualifica y agenda prospectos.' },
   { icon: 'ri-calendar-check-line', iconBg: '#f0fff4', iconColor: '#17a34a', title: 'Agendamiento de citas', description: 'Coordina y recuerda reuniones.' },
@@ -93,38 +35,22 @@ const templates = [
 ]
 
 const externalAgents = [
-  {
-    icon: 'ri-sparkling-2-line',
-    iconBg: '#1a1a1a',
-    iconColor: '#ff6b35',
-    name: 'Claude',
-    description: 'Redacta contenido, analiza documentos y razona sobre problemas complejos.',
-  },
-  {
-    icon: 'ri-code-s-slash-line',
-    iconBg: '#1a1a1a',
-    iconColor: '#a0aec0',
-    name: 'Cursor',
-    description: 'Escribe y edita código en tus repositorios de forma autónoma.',
-  },
+  { icon: 'ri-sparkling-2-line', iconColor: '#ff8c5a', name: 'Claude', description: 'Redacta contenido, analiza documentos y razona sobre problemas complejos.' },
+  { icon: 'ri-code-s-slash-line', iconColor: '#94a3b8', name: 'Cursor', description: 'Escribe y edita código en tus repositorios de forma autónoma.' },
 ]
 
 // ── Status badge ───────────────────────────────────────────────────────────
 
 function StatusBadge({ status }: { status: AgentStatus }) {
-  const styles: Record<AgentStatus, string> = {
-    Activo: 'bg-[#f0fff4] text-[#17a34a]',
-    Inactivo: 'bg-[#f5f5f5] text-[#888]',
-    Borrador: 'bg-[#fffbeb] text-[#d97706]',
+  const config: Record<AgentStatus, { bg: string; color: string; dot: string }> = {
+    Activo:   { bg: '#f0fdf4', color: '#16a34a', dot: '#22c55e' },
+    Inactivo: { bg: '#f5f5f5', color: '#737373', dot: '#d4d4d4' },
+    Borrador: { bg: '#fffbeb', color: '#d97706', dot: '#f59e0b' },
   }
-  const dots: Record<AgentStatus, string> = {
-    Activo: 'bg-[#17a34a]',
-    Inactivo: 'bg-[#bbb]',
-    Borrador: 'bg-[#d97706]',
-  }
+  const c = config[status]
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${dots[status]}`} />
+    <span style={{ background: c.bg, color: c.color, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 999, fontSize: 12, fontWeight: 500 }}>
+      <span style={{ width: 6, height: 6, borderRadius: '50%', background: c.dot, flexShrink: 0 }} />
       {status}
     </span>
   )
@@ -135,98 +61,87 @@ function StatusBadge({ status }: { status: AgentStatus }) {
 function CreateAgentModal({ onClose }: { onClose: () => void }) {
   const [prompt, setPrompt] = useState('')
 
-  const handleSubmit = () => {
-    if (!prompt.trim()) return
-  }
-
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+      style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)' }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div
-        className="relative w-full max-w-[680px] rounded-2xl overflow-hidden flex flex-col"
-        style={{ background: '#1c1c1c', maxHeight: '90vh' }}
-      >
+      <div style={{ background: '#1a1a1a', borderRadius: 20, width: '100%', maxWidth: 660, maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 32px 80px rgba(0,0,0,0.6)' }}>
+
         {/* Top bar */}
-        <div className="flex items-center justify-between px-6 pt-5 pb-2 shrink-0">
-          <div />
-          <div className="flex items-center gap-3">
-            <button className="flex items-center gap-1.5 text-sm text-[#888] hover:text-white transition-colors">
-              <i className="ri-pencil-line text-base" />
-              Crear en blanco
-            </button>
-            <button
-              onClick={onClose}
-              className="flex items-center justify-center w-7 h-7 rounded-md text-[#666] hover:text-white hover:bg-[#2a2a2a] transition-colors"
-            >
-              <i className="ri-close-line text-lg" />
-            </button>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '20px 20px 0', gap: 4 }}>
+          <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 8, background: 'transparent', border: 'none', color: '#777', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}
+            onMouseEnter={e => (e.currentTarget.style.color = '#ccc')}
+            onMouseLeave={e => (e.currentTarget.style.color = '#777')}
+          >
+            <i className="ri-pencil-line" style={{ fontSize: 14 }} />
+            Crear en blanco
+          </button>
+          <button
+            onClick={onClose}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 8, background: 'transparent', border: 'none', color: '#555', cursor: 'pointer', fontFamily: 'inherit' }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#2a2a2a'; e.currentTarget.style.color = '#fff' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#555' }}
+          >
+            <i className="ri-close-line" style={{ fontSize: 18 }} />
+          </button>
         </div>
 
         {/* Scrollable body */}
-        <div className="overflow-y-auto px-6 pb-6 flex flex-col gap-6">
-          {/* Title */}
-          <h2 className="text-white text-[1.45rem] font-semibold text-center leading-snug pt-2">
+        <div style={{ overflowY: 'auto', padding: '20px 28px 28px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+
+          <h2 style={{ margin: 0, textAlign: 'center', color: '#fff', fontSize: 22, fontWeight: 600, lineHeight: 1.3, fontFamily: 'inherit' }}>
             ¿Qué debería hacer tu agente de IA?
           </h2>
 
-          {/* Prompt input */}
-          <PromptInput
-            value={prompt}
-            onValueChange={setPrompt}
-            onSubmit={handleSubmit}
-            className="w-full !border-[#333] !bg-[#252525]"
-          >
-            <PromptInputTextarea
+          {/* Dark prompt input wrapper */}
+          <div style={{ border: '1px solid #333', borderRadius: 16, background: '#252525', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <textarea
+              value={prompt}
+              rows={2}
+              onChange={e => {
+                setPrompt(e.target.value)
+                const el = e.target
+                el.style.height = 'auto'
+                el.style.height = `${Math.min(Math.max(el.scrollHeight, 40), 120)}px`
+              }}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) e.preventDefault() }}
               placeholder="Ej: Gestiona pedidos de Shopify y responde preguntas de estado..."
-              className="!text-white !placeholder-[#555]"
+              style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', resize: 'none', color: '#e5e5e5', fontSize: 14, fontFamily: 'inherit', lineHeight: 1.5, minHeight: 40, overflowY: 'auto', boxSizing: 'border-box' }}
             />
-            <PromptInputActions>
-              <PromptInputActionGroup />
-              <PromptInputActionGroup>
-                <PromptInputAction
-                  onClick={handleSubmit}
-                  disabled={!prompt.trim()}
-                  className={`rounded-lg w-8 h-8 flex items-center justify-center transition-colors ${
-                    prompt.trim()
-                      ? 'bg-white text-[#111] hover:bg-[#ddd]'
-                      : 'bg-[#333] text-[#555]'
-                  }`}
-                  tooltip="Enviar"
-                >
-                  <i className="ri-arrow-up-line text-base" />
-                </PromptInputAction>
-              </PromptInputActionGroup>
-            </PromptInputActions>
-          </PromptInput>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+              <button
+                style={{ width: 32, height: 32, borderRadius: 8, border: 'none', cursor: prompt.trim() ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', background: prompt.trim() ? '#fff' : '#333', color: prompt.trim() ? '#111' : '#555', fontFamily: 'inherit', transition: 'background 0.15s, color 0.15s' }}
+              >
+                <i className="ri-arrow-up-line" style={{ fontSize: 15 }} />
+              </button>
+            </div>
+          </div>
 
           {/* Agent templates */}
           <div>
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-sm font-medium text-[#ccc]">Plantillas de agentes</p>
-              <button className="flex items-center gap-1 text-xs text-[#888] hover:text-white transition-colors">
-                Ver marketplace
-                <i className="ri-arrow-right-up-line text-xs" />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <span style={{ color: '#aaa', fontSize: 13, fontWeight: 500, fontFamily: 'inherit' }}>Plantillas de agentes</span>
+              <button style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#666', fontSize: 12, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#aaa')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#666')}
+              >
+                Ver marketplace <i className="ri-arrow-right-up-line" style={{ fontSize: 12 }} />
               </button>
             </div>
-            <div className="grid grid-cols-4 gap-2">
-              {templates.map((t) => (
-                <button
-                  key={t.title}
-                  className="flex flex-col gap-2.5 p-3.5 rounded-xl border border-[#2e2e2e] bg-[#222] text-left hover:border-[#444] hover:bg-[#282828] transition-all"
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+              {modalTemplates.map(t => (
+                <button key={t.title}
+                  style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '14px 12px', borderRadius: 12, border: '1px solid #2e2e2e', background: '#222', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s, background 0.15s' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.background = '#2a2a2a' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#2e2e2e'; e.currentTarget.style.background = '#222' }}
                 >
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center"
-                    style={{ background: t.iconBg }}
-                  >
-                    <i className={`${t.icon} text-base`} style={{ color: t.iconColor }} />
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: t.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <i className={t.icon} style={{ fontSize: 16, color: t.iconColor }} />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-white leading-snug">{t.title}</p>
-                    <p className="text-xs text-[#666] mt-0.5 leading-snug">{t.description}</p>
+                    <p style={{ margin: 0, color: '#e5e5e5', fontSize: 13, fontWeight: 600, lineHeight: 1.3 }}>{t.title}</p>
+                    <p style={{ margin: '3px 0 0', color: '#666', fontSize: 11, lineHeight: 1.4 }}>{t.description}</p>
                   </div>
                 </button>
               ))}
@@ -235,25 +150,23 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
 
           {/* External agents */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <p className="text-sm font-medium text-[#ccc]">Agentes externos</p>
-              <i className="ri-information-line text-sm text-[#555]" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+              <span style={{ color: '#aaa', fontSize: 13, fontWeight: 500, fontFamily: 'inherit' }}>Agentes externos</span>
+              <i className="ri-information-line" style={{ fontSize: 13, color: '#555' }} />
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              {externalAgents.map((a) => (
-                <button
-                  key={a.name}
-                  className="flex items-start gap-3 p-4 rounded-xl border border-[#2e2e2e] bg-[#222] text-left hover:border-[#444] hover:bg-[#282828] transition-all"
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              {externalAgents.map(a => (
+                <button key={a.name}
+                  style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '14px 16px', borderRadius: 12, border: '1px solid #2e2e2e', background: '#222', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s, background 0.15s' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.background = '#2a2a2a' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#2e2e2e'; e.currentTarget.style.background = '#222' }}
                 >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: a.iconBg, border: '1px solid #333' }}
-                  >
-                    <i className={`${a.icon} text-lg`} style={{ color: a.iconColor }} />
+                  <div style={{ width: 38, height: 38, borderRadius: 10, background: '#111', border: '1px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <i className={a.icon} style={{ fontSize: 18, color: a.iconColor }} />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-white">{a.name}</p>
-                    <p className="text-xs text-[#666] mt-0.5 leading-snug">{a.description}</p>
+                    <p style={{ margin: 0, color: '#e5e5e5', fontSize: 13, fontWeight: 600 }}>{a.name}</p>
+                    <p style={{ margin: '4px 0 0', color: '#666', fontSize: 12, lineHeight: 1.45 }}>{a.description}</p>
                   </div>
                 </button>
               ))}
@@ -271,87 +184,103 @@ export default function V2() {
   const [showModal, setShowModal] = useState(false)
 
   return (
-    <div className="flex h-screen bg-[#fafafa] font-sans">
+    <div style={{ display: 'flex', height: '100vh', background: '#f7f7f7', fontFamily: "'Hanken Grotesk', sans-serif" }}>
       <Sidebar />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top bar */}
-        <header className="shrink-0 flex items-center justify-between px-8 py-5 border-b border-[#ebebeb] bg-white">
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+
+        {/* Header */}
+        <header style={{ background: '#fff', borderBottom: '1px solid #ebebeb', padding: '20px 36px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div>
-            <h1 className="text-lg font-semibold text-[#111] leading-none">Centro de IA</h1>
-            <p className="text-sm text-[#888] mt-0.5">Gestiona y crea tus agentes de inteligencia artificial.</p>
+            <h1 style={{ margin: 0, fontSize: 18, fontWeight: 600, color: '#111', lineHeight: 1.2 }}>Centro de IA</h1>
+            <p style={{ margin: '3px 0 0', fontSize: 13, color: '#999' }}>Gestiona y crea tus agentes de inteligencia artificial.</p>
           </div>
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#111] text-white text-sm font-medium rounded-lg hover:bg-[#333] transition-colors"
+            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 18px', background: '#111', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.15s' }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#333')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#111')}
           >
-            <i className="ri-add-line text-base" />
+            <i className="ri-add-line" style={{ fontSize: 16 }} />
             Crear agente IA
           </button>
         </header>
 
-        {/* Table */}
-        <main className="flex-1 overflow-y-auto px-8 py-6">
-          <div className="bg-white rounded-xl border border-[#ebebeb] overflow-hidden">
+        {/* Main */}
+        <main style={{ flex: 1, overflowY: 'auto', padding: 36 }}>
+          <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #ebebeb', overflow: 'hidden' }}>
+
             {/* Table header */}
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-[#f0f0f0]">
-                  <th className="text-left px-5 py-3.5 text-xs font-semibold text-[#888] uppercase tracking-wider w-[40%]">
-                    Agente
-                  </th>
-                  <th className="text-left px-5 py-3.5 text-xs font-semibold text-[#888] uppercase tracking-wider">
-                    Estado
-                  </th>
-                  <th className="text-left px-5 py-3.5 text-xs font-semibold text-[#888] uppercase tracking-wider">
-                    Conversaciones
-                  </th>
-                  <th className="text-left px-5 py-3.5 text-xs font-semibold text-[#888] uppercase tracking-wider">
-                    Creado
-                  </th>
-                  <th className="px-5 py-3.5 w-12" />
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#f5f5f5]">
-                {agents.map((agent) => (
-                  <tr key={agent.id} className="group hover:bg-[#fafafa] transition-colors">
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-                          style={{ background: agent.iconBg }}
-                        >
-                          <i className={`${agent.icon} text-base`} style={{ color: agent.iconColor }} />
-                        </div>
-                        <div>
-                          <p className="font-medium text-[#111]">{agent.name}</p>
-                          <p className="text-xs text-[#aaa] mt-0.5 max-w-xs truncate">{agent.description}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-5 py-4">
-                      <StatusBadge status={agent.status} />
-                    </td>
-                    <td className="px-5 py-4 text-[#444]">
-                      {agent.conversations > 0
-                        ? agent.conversations.toLocaleString('es-MX')
-                        : <span className="text-[#ccc]">—</span>}
-                    </td>
-                    <td className="px-5 py-4 text-[#888]">{agent.createdAt}</td>
-                    <td className="px-5 py-4">
-                      <button className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-7 h-7 rounded-md text-[#aaa] hover:text-[#111] hover:bg-[#f0f0f0] transition-all">
-                        <i className="ri-more-line text-base" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 40px', padding: '0 24px', borderBottom: '1px solid #f0f0f0' }}>
+              {['Agente', 'Estado', 'Conversaciones', 'Creado', ''].map((label, i) => (
+                <div key={i} style={{ padding: '14px 0', fontSize: 11, fontWeight: 600, color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  {label}
+                </div>
+              ))}
+            </div>
+
+            {/* Rows */}
+            {agents.map((agent, idx) => (
+              <AgentRow key={agent.id} agent={agent} last={idx === agents.length - 1} />
+            ))}
           </div>
         </main>
       </div>
 
       {showModal && <CreateAgentModal onClose={() => setShowModal(false)} />}
+    </div>
+  )
+}
+
+function AgentRow({ agent, last }: { agent: Agent; last: boolean }) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '2fr 1fr 1fr 1fr 40px',
+        padding: '0 24px',
+        borderBottom: last ? 'none' : '1px solid #f5f5f5',
+        background: hovered ? '#fafafa' : '#fff',
+        transition: 'background 0.1s',
+        alignItems: 'center',
+      }}
+    >
+      {/* Agent name + icon */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '18px 0' }}>
+        <div style={{ width: 38, height: 38, borderRadius: 10, background: agent.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <i className={agent.icon} style={{ fontSize: 17, color: agent.iconColor }} />
+        </div>
+        <div>
+          <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#111' }}>{agent.name}</p>
+          <p style={{ margin: '2px 0 0', fontSize: 12, color: '#bbb', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 320 }}>{agent.description}</p>
+        </div>
+      </div>
+
+      {/* Status */}
+      <div style={{ padding: '18px 0' }}>
+        <StatusBadge status={agent.status} />
+      </div>
+
+      {/* Conversations */}
+      <div style={{ padding: '18px 0', fontSize: 14, color: agent.conversations > 0 ? '#333' : '#d4d4d4' }}>
+        {agent.conversations > 0 ? agent.conversations.toLocaleString('es-MX') : '—'}
+      </div>
+
+      {/* Created */}
+      <div style={{ padding: '18px 0', fontSize: 13, color: '#999' }}>{agent.createdAt}</div>
+
+      {/* Actions */}
+      <div style={{ padding: '18px 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <button
+          style={{ width: 28, height: 28, borderRadius: 6, border: 'none', background: hovered ? '#f0f0f0' : 'transparent', color: hovered ? '#555' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.1s, color 0.1s', fontFamily: 'inherit' }}
+        >
+          <i className="ri-more-line" style={{ fontSize: 15 }} />
+        </button>
+      </div>
     </div>
   )
 }
