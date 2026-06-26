@@ -28,10 +28,10 @@ const agents: Agent[] = [
 ]
 
 const modalTemplates = [
-  { icon: 'ri-headphone-line', iconBg: '#fff8ec', iconColor: '#d97706', title: 'Soporte al cliente', description: 'Resuelve dudas y abre tickets 24/7.' },
-  { icon: 'ri-focus-3-line', iconBg: '#fdf4ff', iconColor: '#9333ea', title: 'Calificación de leads', description: 'Cualifica y agenda prospectos.' },
-  { icon: 'ri-calendar-check-line', iconBg: '#f0fff4', iconColor: '#17a34a', title: 'Agendamiento de citas', description: 'Coordina y recuerda reuniones.' },
-  { icon: 'ri-shopping-cart-2-line', iconBg: '#fff0f6', iconColor: '#e5177b', title: 'Carritos abandonados', description: 'Recupera ventas con seguimientos.' },
+  { icon: 'ri-headphone-line', iconBg: '#fff8ec', iconColor: '#d97706', title: 'Soporte al cliente', description: 'Resuelve dudas y abre tickets 24/7.', prompt: 'Un agente de soporte al cliente que responda preguntas frecuentes sobre envíos, devoluciones y estado de pedidos, y escale a un agente humano cuando sea necesario.' },
+  { icon: 'ri-focus-3-line', iconBg: '#fdf4ff', iconColor: '#9333ea', title: 'Calificación de leads', description: 'Cualifica y agenda prospectos.', prompt: 'Un agente que califique prospectos entrantes por WhatsApp, identifique su necesidad y presupuesto, y los agende automáticamente con el vendedor correcto.' },
+  { icon: 'ri-calendar-check-line', iconBg: '#f0fff4', iconColor: '#17a34a', title: 'Agendamiento de citas', description: 'Coordina y recuerda reuniones.', prompt: 'Un agente que coordine el agendamiento de citas, envíe confirmaciones automáticas y recuerde a los clientes 24 horas y 1 hora antes de su cita.' },
+  { icon: 'ri-shopping-cart-2-line', iconBg: '#fff0f6', iconColor: '#e5177b', title: 'Carritos abandonados', description: 'Recupera ventas con seguimientos.', prompt: 'Un agente que contacte a clientes que abandonaron su carrito de compras, ofrezca asistencia personalizada y un incentivo para completar su compra.' },
 ]
 
 const externalAgents = [
@@ -66,7 +66,7 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
       style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)' }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 820, maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.18)' }}>
+      <div style={{ background: '#f3f3f3', borderRadius: 20, width: '100%', maxWidth: 820, maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.18)' }}>
 
         {/* Top bar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '20px 20px 0' }}>
@@ -88,7 +88,7 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
           </h2>
 
           {/* Prompt input */}
-          <div style={{ border: '1px solid #e2e2e2', borderRadius: 16, background: '#fff', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10, boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
+          <div style={{ border: '1px solid #e2e2e2', borderRadius: 16, background: '#fff', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
             <textarea
               value={prompt}
               rows={2}
@@ -119,9 +119,10 @@ function CreateAgentModal({ onClose }: { onClose: () => void }) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
               {modalTemplates.map(t => (
                 <button key={t.title}
-                  style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '16px 14px', borderRadius: 12, border: '1px solid #ebebeb', background: '#fafafa', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s, box-shadow 0.15s' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#d0d0d0'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)' }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.boxShadow = 'none' }}
+                  onClick={() => setPrompt(t.prompt)}
+                  style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '16px 14px', borderRadius: 12, border: '1px solid #e8e8e8', background: '#fff', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s, box-shadow 0.15s' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#c8c8c8'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.07)' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#e8e8e8'; e.currentTarget.style.boxShadow = 'none' }}
                 >
                   <div style={{ width: 36, height: 36, borderRadius: 10, background: t.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <i className={t.icon} style={{ fontSize: 16, color: t.iconColor }} />
